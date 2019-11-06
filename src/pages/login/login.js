@@ -37,7 +37,7 @@ class Login extends Component {
                         <Form.Item>
                             {
                                 getFieldDecorator('password', {
-                                    initialValue: '',
+                                    initialValue:'',
                                     rules: [
                                         { validator: this.validatorPwd }
                                     ],
