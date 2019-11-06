@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-
+import './login.less'
 
 class Login extends Component {
     render() { 
         return ( 
-           <div>1111111111</div>
+           <div className="login">1111111111</div>
          );
     }
 }
