@@ -2,10 +2,16 @@ import React, { Component } from 'react';
 import './login.less'
 import logo from './images/logo.png'
 import { Form, Icon, Input, Button } from 'antd';
+import storageUtil from '../../utils/storageUtils'
+import { Redirect } from 'react-router-dom'
 
 class Login extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
+        const username = storageUtil.getUser()
+        if(!username){
+             return <Redirect to='/'/>
+        }
         return (
             <div className="login">
                 <div className="login-header">
@@ -18,9 +24,9 @@ class Login extends Component {
                         <Form.Item>
                             {
                                 getFieldDecorator('username', {
-                                    initialValue:'',
+                                    initialValue: '',
                                     rules: [
-                                        { required: true,whitespace:true, message: '用户名不能为空' },
+                                        { required: true, whitespace: true, message: '用户名不能为空' },
                                         { min: 4, message: '用户名不能小于4位' },
                                         { max: 12, message: '用户名不能大于12位' },
                                         { pattern: /^[a-zA-Z0-9]+$/, message: '用户名必须是字母和数字组成' },
@@ -37,7 +43,7 @@ class Login extends Component {
                         <Form.Item>
                             {
                                 getFieldDecorator('password', {
-                                    initialValue:'',
+                                    initialValue: '',
                                     rules: [
                                         { validator: this.validatorPwd }
                                     ],
@@ -70,9 +76,9 @@ class Login extends Component {
             callback('密码不能小于4位')
         } else if (value.length > 12) {
             callback('密码不能大于12位')
-        }else if (!/^[a-zA-Z0-9]+$/.test(value)) {
+        } else if (!/^[a-zA-Z0-9]+$/.test(value)) {
             callback('密码必须是字母和数字组成')
-        }else{
+        } else {
             callback()
         }
 
@@ -80,10 +86,12 @@ class Login extends Component {
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            // console.log(values);
             if (!err) {
-              console.log( values);
+                storageUtil.saveUser(values.username)
+                this.props.history.replace("/")
             }
-          });
+        });
     };
 }
 
