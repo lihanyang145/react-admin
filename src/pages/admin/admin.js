@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import storageUtil from '../../utils/storageUtils'
 import { Redirect } from 'react-router-dom'
 class Admin extends Component {
-    render() { 
-        const username = storageUtil.getUser()
-        if(!username){
-            return <Redirect to='/login' />
+    render() {
+        const username = storageUtil.getUser();
+        console.log(username)
+        if (!username) {
+            return <Redirect to="/login" />
         }
-        return ( 
+        return (
             <div>用户名{username}</div>
-         );
+        );
     }
 }
- 
+
 export default Admin;

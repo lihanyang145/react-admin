@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './login.less'
 import logo from './images/logo.png'
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button ,message } from 'antd';
 import storageUtil from '../../utils/storageUtils'
 import { Redirect } from 'react-router-dom'
 
@@ -9,7 +9,8 @@ class Login extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         const username = storageUtil.getUser()
-        if(!username){
+        console.log(username)
+        if(username){
              return <Redirect to='/'/>
         }
         return (
@@ -90,6 +91,7 @@ class Login extends Component {
             if (!err) {
                 storageUtil.saveUser(values.username)
                 this.props.history.replace("/")
+                message.success('登录成功')
             }
         });
     };
