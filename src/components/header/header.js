@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modalgit } from 'antd';
+import { Modal } from 'antd';
 import { withRouter } from 'react-router-dom'
 import storageUtil from '../../utils/storageUtils'
 import menulist from '../../config/menuConfig'
@@ -51,12 +51,10 @@ class Header extends Component {
             okText: '确定',
             cancelText: '取消',
             onOk: () => {
-                console.log('OK');
                 storageUtil.removeUser()
                 this.props.history.replace("/login")
             },
             onCancel: () => {
-                console.log('Cancel');
             },
         });
 
@@ -70,7 +68,6 @@ class Header extends Component {
             } else if (item.children) {
                 const cItem = item.children.find(cItem => cItem.key === path)
                 if (cItem) {
-                    console.log(item.title);
                     title = cItem.title
                 }
             }

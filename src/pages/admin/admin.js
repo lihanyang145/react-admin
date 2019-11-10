@@ -26,7 +26,7 @@ class Admin extends Component {
                 </Sider>
                 <Layout>
                     <Header />
-                    <Content style={{ backgroundColor: '#454554' }}>
+                    <Content style={{ backgroundColor: '#fff',margin:'20px'}}>
                         <Switch>
                             <Route path="/home" component={Home} />
                             <Route path="/product" component={Product} />
