@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
 import { Card, Table, Button, Icon, Modal } from 'antd';
 import AddUpdateFrom from './add-update-from'
-class Cotegory extends Component {
+class Category extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            count: 10,
+            showStatus: 0,//0:显示  1：显示添加  2：显示修改
             columns: [{
                 title: 'Name',
                 dataIndex: 'name',
-                render: text => <a>{text}</a>,
+                render: (text, record) => <a onClick={() => {
+                    // this.category = category,
+                    this.categoryName = record.name
+                    this.setState({
+                        showStatus: 2
+                    })
+                }
+
+                }>{text}</a>,
             },
             {
                 title: 'Cash Assets',
@@ -38,14 +48,18 @@ class Cotegory extends Component {
                 address: 'Sidney No. 1 Lake Park',
             },
             ],
-            count: 10,
-            showStatus: 0,//0:显示  1：显示添加  2：显示修改
+
         }
     }
     render() {
-        const { showStatus, count, data } = this.state
+        const { showStatus } = this.state
+        console.log('showStatus=====+==' + showStatus)
+
         const extra = (
-            <Button onClick={() => { this.setState({ showStatus: 1 }) }}>
+            <Button onClick={() => {
+                this.setState({ showStatus: 1 })
+                this.categoryName=''
+            }}>
                 <Icon type='plus' />
                 添加
             </Button>
@@ -65,7 +79,7 @@ class Cotegory extends Component {
                         onCancel={this.hideModal}
 
                     >
-                        <AddUpdateFrom setForm={form => this.form = form} />
+                        <AddUpdateFrom setForm={form => this.form = form} categoryName={this.categoryName} />
                     </Modal>
                 </Card>
             </div>
@@ -74,24 +88,25 @@ class Cotegory extends Component {
 
     //确定
     handModal = () => {
-        const { count, data } = this.state
-        
+        const { count, data, showStatus } = this.state
+
         this.form.validateFields((err, values) => {
-            console.log(values);
+
             if (!err) {
                 let arr = {
                     key: count,
-                    name: values.cotegoryName,
+                    name: values.categoryName,
                     money: '￥300,000.00',
                     address: 'New York No. 1 Lake Park',
                 }
                 this.setState({
                     data: [...data, arr],
                     count: count + 1,
-                    showStatus:0
+                    showStatus: 0
                 })
+
             }
-          
+
         });
     }
     //取消
@@ -99,7 +114,8 @@ class Cotegory extends Component {
         this.setState({
             showStatus: 0
         })
+        this.form.resetFields()
     }
 }
 
-export default Cotegory;
+export default Category;

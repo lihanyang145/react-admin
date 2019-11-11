@@ -11,7 +11,7 @@ const menuList=[
         children:[
             {
                 title:'品类管理',
-                key:'/cotegory',
+                key:'/category',
                 icon:'bars'
             },
             {

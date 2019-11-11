@@ -7,18 +7,22 @@ class AddUpdateFrom extends Component {
         this.state = {}
     }
     static propTypes = {
-        setForm: PropTypes.func.isRequired
+        setForm: PropTypes.func.isRequired,
+        categoryName: PropTypes.string,
     }
     componentWillMount() {
         this.props.setForm(this.props.form)
     }
     render() {
         const { getFieldDecorator } = this.props.form;
+        console.log('categoryName--'+this.props.categoryName)
         return (
+           
+            
             <Form>
                 <Form.Item>
-                    {getFieldDecorator('cotegoryName', {
-                        initialValue: '',
+                    {getFieldDecorator('categoryName', {
+                        initialValue: this.props.categoryName || '',
                         rules: [{ required: true, message: '分类名称不能为空' }],
                     })(
                         <Input type='text' placeholder="请输入分类名称" />
