@@ -4,16 +4,20 @@ import { Link, withRouter } from 'react-router-dom'
 import logo from '../../assets/images/logo.png'
 import { Menu, Icon } from 'antd';
 import menulist from '../../config/menuConfig'
+import storageUtils from '../../utils/storageUtils';
 const { SubMenu } = Menu;
 class LeftNav extends Component {
     componentWillMount() {
-       this.menuNodes = this.getMenusNodes(menulist)
+        this.menuNodes = this.getMenusNodes(menulist)
     }
 
     render() {
         //获取当前的路由地址
-        const seleteKey = this.props.location.pathname
-      
+        let seleteKey = this.props.location.pathname
+        if (seleteKey.indexOf('/product') === 0) {
+            seleteKey = '/product'
+        }
+
         return (
             <div className='left-nav'>
                 <Link className="left-nav-link" to="/home">
@@ -36,42 +40,66 @@ class LeftNav extends Component {
     getMenusNodes = (menulist) => {
         const path = this.props.location.pathname
         return menulist.map(item => {
-            if (!item.children) {
-                return (
-                    <Menu.Item key={item.key}>
-                        <Link to={item.key}>
-                            <Icon type={item.icon} />
-                            <span>{item.title} </span>
-                        </Link>
-                    </Menu.Item>
-                )
-            } else {
-                const cItem = item.children.find(cItem => cItem.key === path)
-                if (cItem) {
-                    this.openKey = item.key
-                }
-
-
-                return (
-                    <SubMenu
-                        key={item.key}
-                        title={
-                            <span>
+            //判断用户是否有此item对应权限
+            if (this.hasAuth(item)) {
+                if (!item.children) {
+                    return (
+                        <Menu.Item key={item.key}>
+                            <Link to={item.key}>
                                 <Icon type={item.icon} />
-                                <span>{item.title}</span>
-                            </span>
-                        }>
-                        {
-                            this.getMenusNodes(item.children)
-                        }
-                    </SubMenu>
-                )
+                                <span>{item.title} </span>
+                            </Link>
+                        </Menu.Item>
+                    )
+                } else {
+                    const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
+                    if (cItem) {
+                        this.openKey = item.key
+                    }
+
+
+                    return (
+                        <SubMenu
+                            key={item.key}
+                            title={
+                                <span>
+                                    <Icon type={item.icon} />
+                                    <span>{item.title}</span>
+                                </span>
+                            }>
+                            {
+                                this.getMenusNodes(item.children)
+                            }
+                        </SubMenu>
+                    )
+
+                }
 
             }
 
 
+
         })
 
+    }
+
+    hasAuth = (item) => {
+        const username = storageUtils.getUser()
+        const munes = [
+            '/role',
+            '/charts/line',
+            '/home',
+            '/user',
+            '/category',
+            '/product']
+         
+        if (username === 'admin' || item.public || munes.indexOf(item.key) != -1) {
+                return true
+        } else if (item.children) {
+            const cItem = item.children.find(cItem => munes.indexOf(cItem.key) != -1)
+            return !!cItem
+        }
+        return false
     }
 }
 //使用高阶组件包装非路由组件

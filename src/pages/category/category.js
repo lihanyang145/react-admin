@@ -53,8 +53,6 @@ class Category extends Component {
     }
     render() {
         const { showStatus } = this.state
-        console.log('showStatus=====+==' + showStatus)
-
         const extra = (
             <Button onClick={() => {
                 this.setState({ showStatus: 1 })
