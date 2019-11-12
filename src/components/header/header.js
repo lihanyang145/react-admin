@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import { Modal } from 'antd';
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 import storageUtil from '../../utils/storageUtils'
 import menulist from '../../config/menuConfig'
 import './header.less'
 import moment from "moment";
- 
+
 class Header extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             currentTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-         }
+        }
     }
     componentDidMount() {
         //启动日期时间定时器
-        this.interval=setInterval(() => {
+        this.interval = setInterval(() => {
             this.setState({
                 currentTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
             })
@@ -25,8 +26,11 @@ class Header extends Component {
         clearInterval(this.interval)
     }
     render() {
-        const name = storageUtil.getUser()
-        const title = this.getTitle()
+        // const name = storageUtil.getUser()
+        const name = this.props.user.user
+        // const title = this.getTitle()
+        const title = this.props.headerTitle
+
         return (
             <div className="header">
                 <div className='header-top'>
@@ -72,9 +76,15 @@ class Header extends Component {
                 }
             }
         })
-      
+
         return title
     }
 }
 
-export default withRouter(Header);
+export default connect(
+    state => (
+        { headerTitle: state.headerTitle ,
+            user: state.user
+        }),
+    {}
+)(withRouter(Header));

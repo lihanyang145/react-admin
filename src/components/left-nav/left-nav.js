@@ -3,8 +3,10 @@ import './left-nav.less';
 import { Link, withRouter } from 'react-router-dom'
 import logo from '../../assets/images/logo.png'
 import { Menu, Icon } from 'antd';
+import { connect } from 'react-redux'
 import menulist from '../../config/menuConfig'
 import storageUtils from '../../utils/storageUtils';
+import { setHeaderTitle } from '../../redux/action'
 const { SubMenu } = Menu;
 class LeftNav extends Component {
     componentWillMount() {
@@ -43,9 +45,14 @@ class LeftNav extends Component {
             //判断用户是否有此item对应权限
             if (this.hasAuth(item)) {
                 if (!item.children) {
+                    //找到path对应的item 执行setHeaderTitle方法更新title 值是item.title
+                    if (item.key === path || path.indexOf(item.key) === 0) {
+                        this.props.setHeaderTitle(item.title)
+                    }
+
                     return (
                         <Menu.Item key={item.key}>
-                            <Link to={item.key}>
+                            <Link to={item.key} onClick={() => { this.props.setHeaderTitle(item.title) }}>
                                 <Icon type={item.icon} />
                                 <span>{item.title} </span>
                             </Link>
@@ -92,15 +99,18 @@ class LeftNav extends Component {
             '/user',
             '/category',
             '/product']
-         
-        if (username === 'admin' || item.public || munes.indexOf(item.key) != -1) {
-                return true
+
+        if (username === 'admin' || item.public || munes.indexOf(item.key) !== -1) {
+            return true
         } else if (item.children) {
-            const cItem = item.children.find(cItem => munes.indexOf(cItem.key) != -1)
+            const cItem = item.children.find(cItem => munes.indexOf(cItem.key) !== -1)
             return !!cItem
         }
         return false
     }
 }
 //使用高阶组件包装非路由组件
-export default withRouter(LeftNav);
+export default connect(
+    state => ({}),
+    { setHeaderTitle }
+)(withRouter(LeftNav));

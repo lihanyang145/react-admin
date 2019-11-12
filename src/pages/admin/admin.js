@@ -12,10 +12,13 @@ import User from '../user/user';
 import Line from '../charts/line/line';
 import Bar from '../charts/bar/bar';
 import Pie from '../charts/pie/pie';
+import { connect } from 'react-redux'
 const { Footer, Sider, Content } = Layout;
+
 class Admin extends Component {
     render() {
-        const username = storageUtil.getUser();
+        const username = this.props.user.user
+        console.log(username)
         if (!username) {
             return <Redirect to="/login" />
         }
@@ -49,4 +52,9 @@ class Admin extends Component {
     }
 }
 
-export default Admin;
+export default connect(
+    state => ({
+        user: state.user
+    }),
+    {}
+)(Admin) ;

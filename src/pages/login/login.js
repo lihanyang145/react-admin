@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import './login.less'
 import logo from '../../assets/images/logo.png'
-import { Form, Icon, Input, Button ,message } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 import storageUtil from '../../utils/storageUtils'
 import { Redirect } from 'react-router-dom'
-
+import { connect } from 'react-redux'
+import { setUesr } from '../../redux/action'
 class Login extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
-        const username = storageUtil.getUser()
-        console.log(username)
-        if(username){
-             return <Redirect to='/'/>
+        const username = this.props.user.user
+        if (username) {
+            return <Redirect to='/home' />
         }
         return (
             <div className="login">
@@ -89,13 +89,20 @@ class Login extends Component {
         this.props.form.validateFields((err, values) => {
             // console.log(values);
             if (!err) {
-                storageUtil.saveUser(values.username)
-                this.props.history.replace("/")
-                message.success('登录成功')
+                this.props.setUesr(values.username)
+                // storageUtil.saveUser(values.username)
+                // this.props.history.replace("/")
+                // message.success('登录成功')
+
             }
         });
     };
 }
 
 const wrapperFrom = Form.create()(Login)
-export default wrapperFrom;
+export default connect(
+    state => ({
+        user: state.user
+    }),
+    { setUesr }
+)(wrapperFrom);
